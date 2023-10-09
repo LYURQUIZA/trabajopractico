@@ -59,10 +59,6 @@ class Libro
         $this->genero[] = $genero;
     }
 
-    public function setLeido($valor){//puede ser una fecha o null
-        $this->leido = $valor;
-    }
-
     public function Mostrar(){
             $mostrar = "<table border=1><tr><th>Titulo</th></tr>";
             $mostrar .= "<td>".$this->getTitulo()."</td>";
@@ -72,6 +68,9 @@ class Libro
             $mostrar .="<tr><td>".$this->getAutor()."</td><tr>";
             $mostrar .="<tr><th>Generos</th></tr>";
             $mostrar .="<tr><td>".$this->getGenero()."</td><tr>";
+            if ($this->leido != null){
+                $mostrar .="<tr><th>Leido el dia ".$this->getLeido()."</th></tr>";
+            }
             return $mostrar;
     }
 }

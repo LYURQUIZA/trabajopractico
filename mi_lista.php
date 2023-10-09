@@ -22,6 +22,9 @@ $usuario = en_sesion();
         foreach ($mi_lista as  $libro) {
             echo ($libro->Mostrar()."<br>");
             echo ('<form action="eliminar_de_lista.php" method="post">'.'<input type="hidden" name="idlibro" value='.  $libro->getId() .'>'.'<input type="submit" value="eliminar de la lista">'.'</form><hr>');
+            if ($libro->getLeido() == null){
+                echo ('<form action="marcar_leido.php" method="post">'.'<input type="hidden" name="idlibro" value='.  $libro->getId() .'>'.'<input type="submit" value="marcar como leido">'.'</form><hr>');
+            }
         }
     }
     else
@@ -29,6 +32,6 @@ $usuario = en_sesion();
         echo ("No tienes libros seleccionados");
     }
 
-    ?>
+  ?>
 </body>
 </html>

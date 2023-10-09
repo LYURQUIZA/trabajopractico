@@ -28,4 +28,9 @@ class ControladorLibro{
         $rl = new RepositorioLibro();
         $rl->EliminarLista($usuario,$idlibro);
     }
+
+    public function MarcarLeido(Usuario $usuario,$idlibro){
+        $rl = new RepositorioLibro();
+        $rl->MarcarLeido($usuario,$idlibro);
+    }
 }

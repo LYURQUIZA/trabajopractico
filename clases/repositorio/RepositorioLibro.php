@@ -88,7 +88,7 @@ class RepositorioLibro extends Repositorio{
         $q = "INSERT INTO lista_usuarios_libros (id_usuario , id_libro) ";
         $q .= "VALUES (?,?)";
 
-        $this->CargadorDeleteInsert($q,$id_usuario,$idlibro);
+        $this->CargadorDeleteInsertUpdate($q,$id_usuario,$idlibro);
     }
 
     public function EliminarLista(Usuario $usuario,$idlibro){
@@ -97,13 +97,22 @@ class RepositorioLibro extends Repositorio{
         $q = "DELETE FROM lista_usuarios_libros ";
         $q .= "WHERE id_usuario = ? and id_libro = ?";
 
-        $this->CargadorDeleteInsert($q,$id_usuario,$idlibro);
+        $this->CargadorDeleteInsertUpdate($q,$id_usuario,$idlibro);
     }
 
-    public function CargadorDeleteInsert($q,$id_usuario,$idlibro){
+    public function CargadorDeleteInsertUpdate($q,$id_usuario,$idlibro){
         $query = self::$conexion->prepare($q);
         $query->bind_param("dd", $id_usuario, $idlibro);
         $query->execute();
     }
 
+    public function MarcarLeido(Usuario $usuario,$idlibro){
+        $id_usuario = $usuario->getId();
+
+        $q = "UPDATE lista_usuarios_libros ";
+        $q .= "SET leido = CURRENT_TIMESTAMP ";
+        $q .= "WHERE id_usuario = ? and id_libro = ?";
+
+        $this->CargadorDeleteInsertUpdate($q,$id_usuario,$idlibro);
+    }
 }
