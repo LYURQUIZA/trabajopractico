@@ -21,13 +21,13 @@ class RepositorioLibro extends Repositorio{
         $id_usuario = $usuario->getId();
 
         $q = "SELECT libros.id_libro ,libros.titulo , libros.descripcion, generos.genero, autores.autor, lista_usuarios_libros.leido FROM usuarios ";
-        $q .="INNER JOIN lista_usuarios_libros  ON usuarios.id_usuario = lista_usuarios_libros.id_libro ";
+        $q .="INNER JOIN lista_usuarios_libros  ON usuarios.id_usuario = lista_usuarios_libros.id_usuario ";
         $q .="INNER JOIN libros ON libros.id_libro = lista_usuarios_libros.id_libro ";
         $q .="INNER JOIN autores_libros  ON libros.id_libro = autores_libros.id_libro ";
         $q .="INNER JOIN autores ON autores_libros.id_autor = autores.id_autor ";
         $q .="INNER JOIN generos_libros on libros.id_libro = generos_libros.id_libro ";
         $q .="INNER JOIN generos on generos.id_genero = generos_libros.id_genero ";
-        $q .="WHERE usuarios.id_usuario = ? ";
+        $q .="WHERE usuarios.id_usuario = ? ";  
         $q .="ORDER BY libros.id_libro;";
 
         return $this->CargadorSelect($q,$id_usuario);
@@ -80,5 +80,16 @@ class RepositorioLibro extends Repositorio{
             return false;
         }
 
+    }
+
+    public function AgregarLista(Usuario $usuario,$idlibro){
+        $id_usuario = $usuario->getId();
+
+        $q = "INSERT INTO lista_usuarios_libros (id_usuario , id_libro) ";
+        $q .= "VALUES (?,?)";
+
+        $query = self::$conexion->prepare($q);
+        $query->bind_param("dd", $id_usuario, $idlibro);
+        $query->execute();
     }
 }

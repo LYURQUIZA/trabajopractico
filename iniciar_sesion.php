@@ -13,6 +13,10 @@
       <div class="text-center">
         <h3>Iniciar sesion</h3>
         <?php
+            session_start();
+            if (isset($_SESSION['usuario'])) {
+                header('Location: perfil.php');
+            }
             if (isset($_GET['mensaje'])) {
                 echo '<div id="mensaje" class="alert alert-primary text-center">
                     <p>'.$_GET['mensaje'].'</p></div>';

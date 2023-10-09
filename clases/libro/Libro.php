@@ -19,6 +19,10 @@ class Libro
         $this->leido = $leido;
     }
 
+    public function getId(){
+        return $this->id;
+    }
+
     public function getTitulo(){
         return $this->titulo;
     }

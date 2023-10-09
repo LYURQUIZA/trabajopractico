@@ -7,25 +7,27 @@
 </head>
 <body>
     <?php
-    require_once "clases/libro/Libro.php";
-    require_once "clases/controlador/ControladorLibro.php"; 
+    require_once "cargar_libros.php"; 
+    require_once "clases/usuario/Usuario.php";
     session_start();
-    $cl = new ControladorLibro();
-    $libroscargados = $cl->CargarLibros();
-    if ($libroscargados !== false){
-        foreach ($libroscargados as  $libro) {
-            echo ($libro->Mostrar()."<br>");
-        }
+    if (isset($_SESSION['usuario'])) {
+        $usuario = unserialize($_SESSION['usuario']);
+        cargar_libros($usuario);
+        ?>
+        <form action="perfil.php" method="post">
+        <input type="submit" value="perfil">
+        </form>
+        <?php
     }
     else
     {
-        echo ("No hay libros para mostrar");
-    }
-    
-    ?>
-    <form action="iniciar_sesion.php" method="post">
+        cargar_libros();
+        ?>
+        <form action="iniciar_sesion.php" method="post">
         <input type="submit" value="Iniciar sesion">
-    </form>
-
+        </form>
+        <?php
+    } 
+    ?>
 </body>
 </html>
