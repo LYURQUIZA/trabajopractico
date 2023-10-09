@@ -88,8 +88,22 @@ class RepositorioLibro extends Repositorio{
         $q = "INSERT INTO lista_usuarios_libros (id_usuario , id_libro) ";
         $q .= "VALUES (?,?)";
 
+        $this->CargadorDeleteInsert($q,$id_usuario,$idlibro);
+    }
+
+    public function EliminarLista(Usuario $usuario,$idlibro){
+        $id_usuario = $usuario->getId();
+
+        $q = "DELETE FROM lista_usuarios_libros ";
+        $q .= "WHERE id_usuario = ? and id_libro = ?";
+
+        $this->CargadorDeleteInsert($q,$id_usuario,$idlibro);
+    }
+
+    public function CargadorDeleteInsert($q,$id_usuario,$idlibro){
         $query = self::$conexion->prepare($q);
         $query->bind_param("dd", $id_usuario, $idlibro);
         $query->execute();
     }
+
 }

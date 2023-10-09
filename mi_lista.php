@@ -21,11 +21,12 @@ $usuario = en_sesion();
     if ($mi_lista != false){
         foreach ($mi_lista as  $libro) {
             echo ($libro->Mostrar()."<br>");
+            echo ('<form action="eliminar_de_lista.php" method="post">'.'<input type="hidden" name="idlibro" value='.  $libro->getId() .'>'.'<input type="submit" value="eliminar de la lista">'.'</form><hr>');
         }
     }
     else
     {
-        echo ("No tiene libros seleccionados");
+        echo ("No tienes libros seleccionados");
     }
 
     ?>

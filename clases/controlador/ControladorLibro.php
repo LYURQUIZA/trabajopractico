@@ -23,4 +23,9 @@ class ControladorLibro{
         $rl = new RepositorioLibro();
         $rl->AgregarLista($usuario,$idlibro);
     }
+
+    public function EliminarLista(Usuario $usuario,$idlibro){
+        $rl = new RepositorioLibro();
+        $rl->EliminarLista($usuario,$idlibro);
+    }
 }

@@ -7,7 +7,7 @@ function mostrarlibros($libroscargados,$ignorar = false){
     if ($libroscargados !== false){//si no hay libros,libroscargados es falso, sino un array con objetos de la clase libro
         foreach ($libroscargados as  $libro) {
             echo ($libro->Mostrar()."<br>");
-            if ($ignorar !== false){//ignorar va a ser falso si el usuario no esta logeado o si no tiene libros en su lista
+            if ($ignorar !== false){//ignorar va a ser falso si el usuario no esta logeado o 0 si no tiene libros en su lista
                 if (!(in_array($libro->getId(),$ignorar))){//si el id del libro no se encuentra en el array ignorar, te permite agregarlo a la lista
                     echo ('<form action="agregar_a_lista.php" method="post">'.'<input type="hidden" name="idlibro" value='.  $libro->getId() .'>'.'<input type="submit" value="agregar a la lista">'.'</form><hr>');     
                 }
@@ -30,6 +30,9 @@ function cargar_libros(Usuario $usuario = null){
         if ($milista !== false){
             foreach ($milista as $libro) {
                 $ignorar[] = $libro->getId();//guarda la id de todos los libros del usuario
+            }
+            if ($ignorar === null){
+                $ignorar[0] = 0;
             }
             mostrarlibros($libroscargados,$ignorar);
         }     
