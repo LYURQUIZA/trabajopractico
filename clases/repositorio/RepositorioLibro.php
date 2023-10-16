@@ -5,16 +5,29 @@ require_once 'clases/usuario/Usuario.php';
 
 class RepositorioLibro extends Repositorio{
 
-    public function CargarLibros(){
+    public function CargarLibros($filtro){
 
         $q = "SELECT libros.id_libro ,libros.titulo , libros.descripcion, generos.genero, autores.autor FROM libros "; 
         $q .="INNER JOIN autores_libros  ON libros.id_libro = autores_libros.id_libro ";
         $q .="INNER JOIN autores ON autores_libros.id_autor = autores.id_autor ";
         $q .="INNER JOIN generos_libros on libros.id_libro = generos_libros.id_libro ";
         $q .="INNER JOIN generos on generos.id_genero = generos_libros.id_genero ";
-        $q .="ORDER BY libros.id_libro;";
         
-        return $this->CargadorSelect($q);
+        if ($filtro){
+            $signo_pregunta = "";
+            for ($i=1; $i <= count($filtro) ; $i++) { 
+                $signo_pregunta .=" ? ,";
+            }
+            $signo_pregunta = substr($signo_pregunta,0,-1);
+            $q .= "WHERE libros.id_libro in ($signo_pregunta) ";
+            $q .="ORDER BY libros.id_libro;";
+            return $this->CargadorSelect($q,false,$filtro);//query,usuario,filtro
+        }
+        else
+        {
+            $q .="ORDER BY libros.id_libro;";
+            return $this->CargadorSelect($q);
+        }
     }
 
     public function MiLista(Usuario $usuario){
@@ -33,7 +46,7 @@ class RepositorioLibro extends Repositorio{
         return $this->CargadorSelect($q,$id_usuario);
     }
 
-    protected function CargadorSelect($q,$id_usuario = false){
+    protected function CargadorSelect($q,$id_usuario = false, $filtro = false){
         $libroscargados = array();
         $id_repetido = 0;
         $pos = 0;
@@ -41,6 +54,17 @@ class RepositorioLibro extends Repositorio{
         $query = self::$conexion->prepare($q);
         if ($id_usuario){
             $query->bind_param("d", $id_usuario);
+        }
+
+        if ($filtro){
+
+            $simbolo = "";
+            for ($i=1; $i <= count($filtro) ; $i++) { 
+                $simbolo .="s";
+            }
+
+            
+            $query->bind_param($simbolo,...$filtro);//encerio... cuantos problemas me dio esta ****** https://www.php.net/manual/en/migration56.new-features.php#migration56.new-features.splat
         }
         
         if ($query->execute()){
@@ -114,5 +138,59 @@ class RepositorioLibro extends Repositorio{
         $q .= "WHERE id_usuario = ? and id_libro = ?";
 
         $this->CargadorDeleteInsertUpdate($q,$id_usuario,$idlibro);
+    }
+
+    public function CargarGeneros(){
+        $q = "SELECT genero from generos;";
+        return $this->CargadorSelectAutoresGeneros($q);
+    }
+
+    public function CargarAutores(){
+        $q = "SELECT autor from autores;";
+        return $this->CargadorSelectAutoresGeneros($q);
+    }
+
+    public function CargadorSelectAutoresGeneros($q){
+        $valor = array();
+        $query = self::$conexion->prepare($q);
+        if ($query->execute()){
+            $query->bind_result($nombre);
+            while ($query->fetch()) {
+                $valor[] = $nombre;
+            }
+            return $valor;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function Filtro($filtro){//trae los id_libro que cumplan con el autor/genero solicitado (or)
+        $genero = $filtro[0];
+        $autor = $filtro[1];
+        $libros = array();
+        
+        $q = "SELECT libros.id_libro FROM libros "; 
+        $q .="INNER JOIN autores_libros  ON libros.id_libro = autores_libros.id_libro ";
+        $q .="INNER JOIN autores ON autores_libros.id_autor = autores.id_autor ";
+        $q .="INNER JOIN generos_libros on libros.id_libro = generos_libros.id_libro ";
+        $q .="INNER JOIN generos on generos.id_genero = generos_libros.id_genero ";
+        $q .="WHERE generos.genero in (?) or autores.autor in (?) ";
+        $q .="ORDER BY libros.id_libro;";
+
+        $query = self::$conexion->prepare($q);
+        $query->bind_param("ss", $genero, $autor);
+        if ($query->execute()){
+            $query->bind_result($id_libro);
+            while ($query->fetch()) {
+                $libros[] = $id_libro;
+            }
+            return  array_unique($libros);//en caso de que se repita una id;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

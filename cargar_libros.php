@@ -1,8 +1,16 @@
-<?php
+<?php 
 require_once "clases/libro/Libro.php";
-require_once "clases/controlador/ControladorLibro.php"; 
+require_once "clases/controlador/ControladorLibro.php";
 require_once "clases/usuario/Usuario.php";
-
+        
+function datos_a_filtrar($genero,$autor){
+    $filtro[0] = $genero;
+    $filtro[1] = $autor;
+    $cl = new ControladorLibro();
+    $id_libros_a_filtrar = $cl->Filtro($filtro);
+    return $id_libros_a_filtrar;
+}
+    
 function mostrarlibros($libroscargados,$ignorar = false){    
     if ($libroscargados !== false){//si no hay libros,libroscargados es falso, sino un array con objetos de la clase libro
         foreach ($libroscargados as  $libro) {
@@ -20,10 +28,20 @@ function mostrarlibros($libroscargados,$ignorar = false){
     }
 }
 
-function cargar_libros(Usuario $usuario = null){
-    $cl = new ControladorLibro();
-    $libroscargados = $cl->CargarLibros();//trae todos los libros
-    
+//valen 1 si no existen 
+function cargar_libros($genero = 1,$autor = 1,Usuario $usuario = null){
+    if (($genero === 1 and $autor === 1) or ($genero === "" and $autor === "")){
+        $filtro = false;
+        $cl = new ControladorLibro();
+        $libroscargados = $cl->CargarLibros($filtro);//trae todos los libros
+    }
+    else
+    {
+        $filtro = datos_a_filtrar($genero,$autor);//devuelve las id de los libros que cumplen la condicion, o falso
+        $cl = new ControladorLibro();
+        $libroscargados = $cl->CargarLibros($filtro);//trae los libros segun la condicion del filtro, si filtro vale false, se traen todos los libros
+    }
+
     if ($usuario !== null){//si usuario es distinto de null, significa que esta logeado y que la funcion recibio el objeto usuario
         $cl = new ControladorLibro();
         $milista = $cl->MiLista($usuario);//Trae los libros que el usuario selecciono previamente
@@ -31,7 +49,7 @@ function cargar_libros(Usuario $usuario = null){
             foreach ($milista as $libro) {
                 $ignorar[] = $libro->getId();//guarda la id de todos los libros del usuario
             }
-            if ($ignorar === null){
+            if (!isset($ignorar)){//si no tiene valor, le asigna 0
                 $ignorar[0] = 0;
             }
             mostrarlibros($libroscargados,$ignorar);

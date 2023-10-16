@@ -5,10 +5,10 @@ require_once 'clases/usuario/Usuario.php';
 
 class ControladorLibro{
 
-    //devuelve todos los libros
-    public function CargarLibros(){
+    //devuelve todos los libros o los libros solicitados mediante el filtro
+    public function CargarLibros($filtro){
         $rl = new RepositorioLibro();
-        $libroscargados = $rl->CargarLibros();
+        $libroscargados = $rl->CargarLibros($filtro);
         return $libroscargados;
     }
 
@@ -33,4 +33,21 @@ class ControladorLibro{
         $rl = new RepositorioLibro();
         $rl->MarcarLeido($usuario,$idlibro);
     }
+
+    public function CargarGeneros(){
+        $rl = new RepositorioLibro();
+        return $rl->CargarGeneros();
+    }
+
+    public function CargarAutores(){
+        $rl = new RepositorioLibro();
+        return $rl->CargarAutores();
+    }
+
+    //devuelve un array con los id_libro o false
+    public function Filtro($filtro){
+        $rl = new RepositorioLibro();
+        return $rl->Filtro($filtro);
+    }
+    
 }
