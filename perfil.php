@@ -27,10 +27,10 @@ $nomApe = $usuario->getNombreApellido();
             }
         ?>
         <p><a href="mi_lista.php">Mi Lista</a></p>
+        <p><a href="index.php">Volver al inicio</a></p>
         <p><a href="datos_modificar.php">Modificar datos de mi usuario</a></p>
         <p><a href="confirmar_delete.php">Eliminar mi usuario</a></p>
         <p><a href="logout.php">Cerrar sesión</a></p>
       </div>
     </body>
 </html>
-

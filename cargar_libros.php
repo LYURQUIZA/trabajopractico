@@ -14,12 +14,14 @@ function datos_a_filtrar($genero,$autor){
 function mostrarlibros($libroscargados,$ignorar = false){    
     if ($libroscargados !== false){//si no hay libros,libroscargados es falso, sino un array con objetos de la clase libro
         foreach ($libroscargados as  $libro) {
-            echo ($libro->Mostrar()."<br>");
+            ?><article class="contenedor2"><?php
+            echo ($libro->Mostrar());
             if ($ignorar !== false){//ignorar va a ser falso si el usuario no esta logeado o 0 si no tiene libros en su lista
                 if (!(in_array($libro->getId(),$ignorar))){//si el id del libro no se encuentra en el array ignorar, te permite agregarlo a la lista
-                    echo ('<form action="agregar_a_lista.php" method="post">'.'<input type="hidden" name="idlibro" value='.  $libro->getId() .'>'.'<input type="submit" value="agregar a la lista">'.'</form><hr>');     
+                    echo ('<form action="agregar_a_lista.php" method="post">'.'<input type="hidden" name="idlibro" value='.  $libro->getId() .'>'.'<input type="submit" class ="boton" value="agregar a la lista">'.'</form><br>');     
                 }
             }
+            ?></article><?php
         }
     }
     else

@@ -25,10 +25,11 @@
 
         <form action="login.php" method="post">
             <input name="usuario" class="form-control form-control-lg" placeholder="Usuario"><br>
-            <input name="clave" type="text" class="form-control form-control-lg" placeholder="Contraseña"><br>
+            <input name="clave" type="password" class="form-control form-control-lg" placeholder="Contraseña"><br>
             <input type="submit" value="Ingresar" class="btn btn-primary">
         </form><br>
         <p><a href="create.php">Registrarse</a></p>
+        <p><a href="index.php">Volver al inicio</a></p>
       </div> 
     </body>
 </html>

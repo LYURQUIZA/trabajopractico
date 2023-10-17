@@ -60,17 +60,18 @@ class Libro
     }
 
     public function Mostrar(){
-            $mostrar = "<table border=1><tr><th>Titulo</th></tr>";
-            $mostrar .= "<td>".$this->getTitulo()."</td>";
-            $mostrar .="<tr><th>Descripcion</th></tr>";
+            $mostrar = '<table border=1>';
+            $mostrar .= '<tr><th class="text-32 naranja">'.$this->getTitulo().'</th></tr>';
+            $mostrar .='<tr><th class="text-24">Descripcion</th></tr>';
             $mostrar .= "<td>".$this->getDescripcion()."</td>";
-            $mostrar .="<tr><th>Autores</th></tr>";
-            $mostrar .="<tr><td>".$this->getAutor()."</td><tr>";
-            $mostrar .="<tr><th>Generos</th></tr>";
-            $mostrar .="<tr><td>".$this->getGenero()."</td><tr>";
+            $mostrar .='<tr><th class="text-24">Autores</th></tr>';
+            $mostrar .="<tr><td class=centrar>".$this->getAutor()."</td><tr>";
+            $mostrar .='<tr><th class="text-24">Generos</th></tr>';
+            $mostrar .="<tr><td class=centrar>".$this->getGenero()."</td><tr>";
             if ($this->leido != null){
                 $mostrar .="<tr><th>Leido el dia ".$this->getLeido()."</th></tr>";
             }
+            $mostrar .='</table>';
             return $mostrar;
     }
 }
